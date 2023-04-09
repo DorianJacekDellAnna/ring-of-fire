@@ -9,6 +9,7 @@ import {
   collection,
   setDoc,
   doc,
+  docData,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -24,8 +25,10 @@ export class GameComponent implements OnInit {
   currentCard: string = '';
   games$: Observable<any>;
   firestore: Firestore = inject(Firestore);
+  gameId: string = '';
+  gamesCollection = collection(this.firestore, 'games');
 
-  constructor(private route: ActivatedRoute, public dialog: MatDialog) { 
+  constructor(private route: ActivatedRoute, public dialog: MatDialog) {
     const itemCollection = collection(this.firestore, 'games');
     this.games$ = collectionData(itemCollection);
   }
@@ -35,25 +38,31 @@ export class GameComponent implements OnInit {
     this.route.params.subscribe((params) => {
       console.log(params);
 
-
-
-
       this.games$.subscribe((game) => {
         console.log('Game update:', game);
-
-
-
-      
-    });
-
+        this.getGameData(params);
+      });
     });
   }
 
   newGame() {
     this.game = new Game();
 
-   /* const coll = collection(this.firestore, 'games');
+    /* const coll = collection(this.firestore, 'games');
     setDoc(doc(coll), this.game.toJson());*/
+  }
+
+  async getGameData(params: any) {
+    this.gameId = params['id'];
+    let docRef = doc(this.gamesCollection, this.gameId);
+    let game$ = docData(docRef);
+    game$.subscribe((game: any) => {
+      console.log(game);
+      this.game.currentPlayer = game.currentPlayer;
+      this.game.playedCards = game.playedCards;
+      this.game.players = game.players;
+      this.game.stack = game.stack;
+    });
   }
 
   takeCard() {

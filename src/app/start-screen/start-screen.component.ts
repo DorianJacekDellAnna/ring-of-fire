@@ -7,7 +7,7 @@ import {
   Firestore,
   collectionData,
   collection,
-  setDoc,
+  addDoc,
   doc,
   docData,
 } from '@angular/fire/firestore';
@@ -31,10 +31,9 @@ export class StartScreenComponent implements OnInit {
     //start game
 
     const coll = collection(this.firestore, 'games');
-    setDoc(doc(coll), this.game.toJson()).then((gameInfo: any) => {
-      //this.router.navigateByUrl('/game');
-      console.log(gameInfo);
-      
+    addDoc(coll, this.game.toJson()).then((gameInfo) => {
+      console.log(gameInfo.id);
+      this.router.navigateByUrl('/game/' + gameInfo.id);
     });
   }
 }

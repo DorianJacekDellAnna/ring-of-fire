@@ -1,13 +1,4 @@
 {
-  "targets": {
-    "ringoffire-doriandellanna": {
-      "hosting": {
-        "ringoffire": [
-          "ringoffire-doriandellanna"
-        ]
-      }
-    }
-  },
   "projects": {
     "default": "ringoffire-doriandellanna"
   }
